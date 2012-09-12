@@ -12,9 +12,9 @@ public class AuctionPlayer {
 	/** The league that the player is being auctioned in. */
 	private int leagueId;
 	/** The fantasy team that is leading the bidding. */
-	private String team;
+	private int teamId;
 	/** The time that the auction expires. */
-	private String expirationTime;
+	private long expirationTime;
 	/** The current leading bid on the player. */
 	private int bid;
 	/** The full details of the player being auctioned. */
@@ -45,27 +45,27 @@ public class AuctionPlayer {
 		this.leagueId = leagueId;
 	}
 	/**
-	 * @return the team
+	 * @return the teamId
 	 */
-	public String getTeam() {
-		return team;
+	public int getTeamId() {
+		return teamId;
 	}
 	/**
-	 * @param team the team to set
+	 * @param teamId the team to set
 	 */
-	public void setTeam(String team) {
-		this.team = team;
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
 	}
 	/**
 	 * @return the expirationTime
 	 */
-	public String getExpirationTime() {
+	public long getExpirationTime() {
 		return expirationTime;
 	}
 	/**
 	 * @param expirationTime the expirationTime to set
 	 */
-	public void setExpirationTime(String expirationTime) {
+	public void setExpirationTime(long expirationTime) {
 		this.expirationTime = expirationTime;
 	}
 	/**

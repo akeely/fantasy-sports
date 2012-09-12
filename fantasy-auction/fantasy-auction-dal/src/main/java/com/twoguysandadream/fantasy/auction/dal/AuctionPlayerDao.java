@@ -15,6 +15,8 @@ public interface AuctionPlayerDao {
 	 */
 	public List<AuctionPlayer> getPlayers(int leagueId) throws DataAccessException;
 
+	public List<AuctionPlayer> getPlayersByTeam(int leagueId, int teamId) throws DataAccessException;
+	
 	/**
 	 * Add a new player to be auctioned.
 	 * 
