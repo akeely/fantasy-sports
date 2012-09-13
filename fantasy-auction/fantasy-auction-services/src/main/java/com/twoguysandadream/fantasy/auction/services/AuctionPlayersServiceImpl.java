@@ -242,6 +242,19 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         return currentTime + leagueSettings.getBidTimeExtensionMillis();
     }
 
+    /**
+     * Check whether a bid is legitimate.
+     * 
+     * @param auctionPlayer The player being bid on.
+     * @param leagueId The league the bid is being made in.
+     * @param teamId The team making the bid.
+     * @param bid The bid to check. 
+     * @param leagueSettings The league settings to determine roster size and minimum bids.
+     * @throws InsufficientBidException if the bid is not greater than the previous bid.
+     * @throws InsufficientFundsException if the team cannot afford the bid.
+     * @throws RosterFullException if the team does not have roster space available for the bid.
+     * @throws AuctionPlayersServiceException if a data access error occurs.
+     */
     private void checkBid(AuctionPlayer auctionPlayer, int leagueId, int teamId, int bid,
             LeagueSettings leagueSettings) throws AuctionPlayersServiceException {
 
@@ -267,6 +280,13 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         }
     }
 
+    /**
+     * Get the list of players a team has the leading bid on and has won.
+     * @param leagueId The league to get the players for.
+     * @param teamId The team to get the players for.
+     * @return The list of players the team has won and is leading.
+     * @throws AuctionPlayersServiceException if the players cannot be retrieved.
+     */
     private List<AuctionPlayer> getOutstandingPlayers(int leagueId, int teamId)
             throws AuctionPlayersServiceException {
 
@@ -293,6 +313,13 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         return outstandingPlayers;
     }
 
+    /**
+     * Get the maximum bid a team can make.
+     * 
+     * @param outstandingPlayers The players the team is already winning.
+     * @param leagueSettings The settings containing the salary cap and roster size.
+     * @return The maximum bid the team can make.
+     */
     private int getMaxBid(List<AuctionPlayer> outstandingPlayers, LeagueSettings leagueSettings) {
 
         int totalBids = 0;
@@ -306,6 +333,15 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
                 - (openSpots * leagueSettings.getMinimumBid());
     }
 
+    /**
+     * Get a player currently being auctioned.
+     * 
+     * @param leagueId The league to get the player for.
+     * @param playerId The player to get.
+     * @return The player from the auction. This cannot be null.
+     * @throws AuctionExpiredException if the auction has already expired.
+     * @throws AuctionPlayersServiceException if the player cannot be retrieved.
+     */
     private synchronized AuctionPlayer getAuctionPlayer(int leagueId, int playerId)
             throws AuctionPlayersServiceException {
 
@@ -318,13 +354,20 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
                     + playerId, e);
         }
 
-        if (checkForExpiredBid(auctionPlayer)) {
+        if (auctionPlayer == null || checkForExpiredBid(auctionPlayer)) {
             throw new AuctionExpiredException("Auction has expired for player " + playerId);
         }
 
         return auctionPlayer;
     }
 
+    /**
+     * Check if an auction has expired. If it has, mark the player as won.
+     * 
+     * @param auctionPlayer The player to check.
+     * @return True if the auction has expired, or false otherwise.
+     * @throws AuctionPlayersServiceException if the player has been won and cannot be updated.
+     */
     private boolean checkForExpiredBid(AuctionPlayer auctionPlayer)
             throws AuctionPlayersServiceException {
 
@@ -337,6 +380,12 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         return true;
     }
 
+    /**
+     * Mark a player as won and remove them from the auction.
+     * 
+     * @param auctionPlayer The player that has been won.
+     * @throws AuctionPlayersServiceException if the player cannot be updated.
+     */
     private synchronized void updatePlayerWon(AuctionPlayer auctionPlayer)
             throws AuctionPlayersServiceException {
 
