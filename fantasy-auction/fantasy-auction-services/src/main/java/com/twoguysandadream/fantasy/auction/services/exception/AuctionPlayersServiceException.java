@@ -1,18 +1,32 @@
 package com.twoguysandadream.fantasy.auction.services.exception;
 
+import com.twoguysandadream.fantasy.auction.services.AuctionPlayersService;
+
+/**
+ * A General exception for all errors related to the {@link AuctionPlayersService}.
+ * 
+ * @author akeely
+ * 
+ */
 public class AuctionPlayersServiceException extends Exception {
 
-	private static final long serialVersionUID = 8406893194290382525L;
+    /** Generated UID. */
+    private static final long serialVersionUID = 8406893194290382525L;
 
-	public AuctionPlayersServiceException(String message) {
+    /**
+     * @see Exception#Exception(String)
+     */
+    public AuctionPlayersServiceException(String message) {
 
-		super(message);
-	}
+        super(message);
+    }
 
+    /**
+     * @see Exception#Exception(String, Throwable)
+     */
+    public AuctionPlayersServiceException(String message, Throwable cause) {
 
-	public AuctionPlayersServiceException(String message, Throwable cause) {
-		
-		super(message, cause);
-	}
+        super(message, cause);
+    }
 
 }
