@@ -102,9 +102,6 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
 
     /**
      * @see AuctionPlayersService#updateBid(int, int, int, int)
-     * @throws InsufficientBidException if the bid is not greater than the previous bid.
-     * @throws InsufficientFundsException if the bidding team cannot afford the bid.
-     * @throws RosterFullException if the bidding team does not have available roster space.
      */
     @Override
     public synchronized void updateBid(int leagueId, int playerId, int teamId, int bid)

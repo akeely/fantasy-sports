@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionPlayersServiceException;
+import com.twoguysandadream.fantasy.auction.services.exception.InsufficientBidException;
+import com.twoguysandadream.fantasy.auction.services.exception.InsufficientFundsException;
+import com.twoguysandadream.fantasy.auction.services.exception.RosterFullException;
 
 /**
  * Manage the players available in an ongoing auction.
@@ -29,6 +32,9 @@ public interface AuctionPlayersService {
      * @param playerId The player to bid on.
      * @param teamId The team submitting the bid.
      * @param bid The bid amount.
+     * @throws InsufficientBidException if the bid is not greater than the previous bid.
+     * @throws InsufficientFundsException if the bidding team cannot afford the bid.
+     * @throws RosterFullException if the bidding team does not have available roster space.
      * @throws AuctionPlayersServiceException if the bid cannot be submitted, or is invalid.
      */
     public void updateBid(int leagueId, int playerId, int teamId, int bid)
