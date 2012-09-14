@@ -5,7 +5,6 @@ package com.twoguysandadream.fantasy.auction.services.exception;
  * remaining.
  * 
  * @author akeely
- * 
  */
 public class InsufficientFundsException extends AuctionPlayersServiceException {
 
@@ -14,11 +13,8 @@ public class InsufficientFundsException extends AuctionPlayersServiceException {
 
     /**
      * @see AuctionPlayersServiceException#AuctionPlayersServiceException(String)
-     * 
-     * @param maxBid
-     *            The maximum bid the team can make.
-     * @param attemptedBid
-     *            The attempted bid by the team.
+     * @param maxBid The maximum bid the team can make.
+     * @param attemptedBid The attempted bid by the team.
      */
     public InsufficientFundsException(int maxBid, int attemptedBid) {
 

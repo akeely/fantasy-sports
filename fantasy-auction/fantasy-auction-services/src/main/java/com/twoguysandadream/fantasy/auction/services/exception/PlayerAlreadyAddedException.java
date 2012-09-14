@@ -12,9 +12,7 @@ public class PlayerAlreadyAddedException extends AuctionPlayersServiceException 
 
     /**
      * @see AuctionPlayersServiceException#AuctionPlayersServiceException(String)
-     * 
-     * @param playerId
-     *            The player that cannot be added.
+     * @param playerId The player that cannot be added.
      */
     public PlayerAlreadyAddedException(int playerId) {
 
@@ -23,11 +21,8 @@ public class PlayerAlreadyAddedException extends AuctionPlayersServiceException 
 
     /**
      * @see AuctionPlayersServiceException#AuctionPlayersServiceException(String, Throwable)
-     * 
-     * @param playerId
-     *            The player that cannot be added.
-     * @param cause
-     *            The cause of the error.
+     * @param playerId The player that cannot be added.
+     * @param cause The cause of the error.
      */
     public PlayerAlreadyAddedException(int playerId, Throwable cause) {
 

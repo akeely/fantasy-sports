@@ -12,11 +12,8 @@ public class InsufficientBidException extends AuctionPlayersServiceException {
 
     /**
      * @see AuctionPlayersServiceException#AuctionPlayersServiceException(String)
-     * 
-     * @param currentBid
-     *            The current leading bid on the player.
-     * @param attemptedBid
-     *            The attempted bid that is not high enough.
+     * @param currentBid The current leading bid on the player.
+     * @param attemptedBid The attempted bid that is not high enough.
      */
     public InsufficientBidException(int currentBid, int attemptedBid) {
 

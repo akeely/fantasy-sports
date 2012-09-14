@@ -15,11 +15,9 @@ public interface AuctionPlayersService {
     /**
      * Get the list of players currently available to bid on.
      * 
-     * @param leagueId
-     *            The league to get the players for.
+     * @param leagueId The league to get the players for.
      * @return The players available to bid on.
-     * @throws AuctionPlayersServiceException
-     *             if the players cannot be retrieved.
+     * @throws AuctionPlayersServiceException if the players cannot be retrieved.
      */
     public List<AuctionPlayer> getAuctionPlayers(int leagueId)
             throws AuctionPlayersServiceException;
@@ -27,16 +25,11 @@ public interface AuctionPlayersService {
     /**
      * Submit a new bid for a player.
      * 
-     * @param leagueId
-     *            The league to submit the bid for.
-     * @param playerId
-     *            The player to bid on.
-     * @param teamId
-     *            The team submitting the bid.
-     * @param bid
-     *            The bid amount.
-     * @throws AuctionPlayersServiceException
-     *             if the bid cannot be submitted, or is invalid.
+     * @param leagueId The league to submit the bid for.
+     * @param playerId The player to bid on.
+     * @param teamId The team submitting the bid.
+     * @param bid The bid amount.
+     * @throws AuctionPlayersServiceException if the bid cannot be submitted, or is invalid.
      */
     public void updateBid(int leagueId, int playerId, int teamId, int bid)
             throws AuctionPlayersServiceException;
@@ -44,16 +37,11 @@ public interface AuctionPlayersService {
     /**
      * Add a new player to the auction.
      * 
-     * @param leagueId
-     *            The league of the auction to add the player to.
-     * @param playerId
-     *            The player to add to the auction.
-     * @param teamId
-     *            The team submitting the initial bid on the player.
-     * @param bid
-     *            The initial bid on the player.
-     * @throws AuctionPlayersServiceException
-     *             if the player could not be added.
+     * @param leagueId The league of the auction to add the player to.
+     * @param playerId The player to add to the auction.
+     * @param teamId The team submitting the initial bid on the player.
+     * @param bid The initial bid on the player.
+     * @throws AuctionPlayersServiceException if the player could not be added.
      */
     public void addAuctionPlayer(int leagueId, int playerId, int teamId, int bid)
             throws AuctionPlayersServiceException;

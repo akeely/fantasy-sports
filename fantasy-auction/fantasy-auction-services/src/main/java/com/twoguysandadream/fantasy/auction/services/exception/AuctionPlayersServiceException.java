@@ -6,7 +6,6 @@ import com.twoguysandadream.fantasy.auction.services.AuctionPlayersService;
  * A General exception for all errors related to the {@link AuctionPlayersService}.
  * 
  * @author akeely
- * 
  */
 public class AuctionPlayersServiceException extends Exception {
 
