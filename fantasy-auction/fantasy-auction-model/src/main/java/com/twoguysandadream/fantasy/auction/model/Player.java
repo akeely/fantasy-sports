@@ -3,15 +3,20 @@
  */
 package com.twoguysandadream.fantasy.auction.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Metadata relating to a player.
  * 
  * @author akeely
  */
+@Entity
 public class Player {
 
     /** The unique identifier of the player. */
-    private int id;
+    @Id
+    private int playerId;
     /** The full name of the player. */
     private String name;
     /** The sport that the player plays. */
@@ -32,7 +37,7 @@ public class Player {
      */
     public int getId() {
 
-        return id;
+        return playerId;
     }
 
     /**
@@ -40,7 +45,7 @@ public class Player {
      */
     public void setId(int id) {
 
-        this.id = id;
+        this.playerId = id;
     }
 
     /**

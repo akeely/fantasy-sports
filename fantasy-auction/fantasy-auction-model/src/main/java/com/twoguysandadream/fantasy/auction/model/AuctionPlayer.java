@@ -1,12 +1,21 @@
 package com.twoguysandadream.fantasy.auction.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A player that is currently being auctioned.
  * 
  * @author akeely
  */
+@Entity
 public class AuctionPlayer {
 
+    /** A unique identifier for this player. */
+    @Id
+    private int id;
     /** The unique identifier for the player being auctioned. */
     private int playerId;
     /** The league that the player is being auctioned in. */
@@ -18,6 +27,8 @@ public class AuctionPlayer {
     /** The current leading bid on the player. */
     private int bid;
     /** The full details of the player being auctioned. */
+    @ManyToOne
+    @JoinColumn(name = "playerId", insertable = false, updatable = false)
     private Player player;
 
     /**
@@ -50,6 +61,14 @@ public class AuctionPlayer {
     public void setLeagueId(int leagueId) {
 
         this.leagueId = leagueId;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+
+        return id;
     }
 
     /**
@@ -115,5 +134,4 @@ public class AuctionPlayer {
 
         this.player = player;
     }
-
 }

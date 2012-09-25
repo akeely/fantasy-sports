@@ -4,13 +4,9 @@ import java.util.List;
 
 import com.twoguysandadream.fantasy.auction.dal.AuctionPlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.LeagueDao;
-import com.twoguysandadream.fantasy.auction.dal.PlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.PlayersWonDao;
-import com.twoguysandadream.fantasy.auction.dal.exception.DataAccessException;
-import com.twoguysandadream.fantasy.auction.dal.exception.PlayerAlreadyExistsException;
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
-import com.twoguysandadream.fantasy.auction.model.LeagueSettings;
-import com.twoguysandadream.fantasy.auction.model.Player;
+import com.twoguysandadream.fantasy.auction.model.League;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionExpiredException;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionPlayersServiceException;
 import com.twoguysandadream.fantasy.auction.services.exception.InsufficientBidException;
@@ -29,8 +25,6 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private final AuctionPlayerDao auctionPlayerDao;
     /** Used to access players that have been won for the league. */
     private final PlayersWonDao playersWonDao;
-    /** Used to access the metadata about players. */
-    private final PlayerDao playerDao;
     /** Used to access information about the league. */
     private final LeagueDao leagueDao;
 
@@ -39,15 +33,13 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * 
      * @param auctionPlayerDao
      * @param playersWonDao
-     * @param playerDao
      * @param leagueDao
      */
     public AuctionPlayersServiceImpl(AuctionPlayerDao auctionPlayerDao,
-            PlayersWonDao playersWonDao, PlayerDao playerDao, LeagueDao leagueDao) {
+            PlayersWonDao playersWonDao, LeagueDao leagueDao) {
 
         this.auctionPlayerDao = auctionPlayerDao;
         this.playersWonDao = playersWonDao;
-        this.playerDao = playerDao;
         this.leagueDao = leagueDao;
     }
 
@@ -64,16 +56,8 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
 
         AuctionPlayer player = getPlayerToAdd(leagueId, playerId, teamId, bid);
 
-        try {
-            auctionPlayerDao.addPlayer(player);
-        }
-        catch (PlayerAlreadyExistsException e) {
-            throw new PlayerAlreadyAddedException(playerId, e);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to add player to auction for player "
-                    + playerId, e);
-        }
+        addAuctionPlayer(player);
+
     }
 
     /**
@@ -83,21 +67,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     public List<AuctionPlayer> getAuctionPlayers(int leagueId)
             throws AuctionPlayersServiceException {
 
-        List<AuctionPlayer> players = getAuctionPlayersInternal(leagueId);
-
-        for (AuctionPlayer auctionPlayer : players) {
-            Player player;
-            try {
-                player = playerDao.getPlayer(auctionPlayer.getPlayerId());
-            }
-            catch (DataAccessException e) {
-                throw new AuctionPlayersServiceException(
-                        "Failed to get player information for player "
-                                + auctionPlayer.getPlayerId(), e);
-            }
-            auctionPlayer.setPlayer(player);
-        }
-        return players;
+        return getAuctionPlayersInternal(leagueId);
     }
 
     /**
@@ -108,29 +78,18 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
             throws AuctionPlayersServiceException {
 
         AuctionPlayer auctionPlayer = getAuctionPlayer(leagueId, playerId);
-        LeagueSettings leagueSettings;
-        try {
-            leagueSettings = leagueDao.getLeagueSettings(leagueId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to get settings for league "
-                    + leagueId, e);
-        }
 
-        checkBid(auctionPlayer, leagueId, teamId, bid, leagueSettings);
+        League league = leagueDao.findOne(leagueId);
+
+        checkBid(auctionPlayer, leagueId, teamId, bid, league);
 
         auctionPlayer.setBid(bid);
         auctionPlayer.setTeamId(teamId);
         auctionPlayer.setExpirationTime(getUpdatedExpirationTime(auctionPlayer.getExpirationTime(),
-                leagueSettings));
+                league));
 
-        try {
-            auctionPlayerDao.updatePlayer(auctionPlayer);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to update the bid for player "
-                    + playerId, e);
-        }
+        auctionPlayerDao.save(auctionPlayer);
+
     }
 
     /**
@@ -143,14 +102,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private synchronized List<AuctionPlayer> getAuctionPlayersInternal(int leagueId)
             throws AuctionPlayersServiceException {
 
-        List<AuctionPlayer> players;
-        try {
-            players = auctionPlayerDao.getPlayers(leagueId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException(
-                    "Failed to get current auction players for league " + leagueId, e);
-        }
+        List<AuctionPlayer> players = auctionPlayerDao.findByLeagueId(leagueId);
 
         for (AuctionPlayer player : players) {
             if (checkForExpiredBid(player)) {
@@ -158,6 +110,25 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
             }
         }
         return players;
+    }
+
+    /**
+     * Add a new player to the auction.
+     * 
+     * @param player The player to add.
+     * @throws PlayerAlreadyAddedException if the player is already in the auction.
+     */
+    private synchronized void addAuctionPlayer(AuctionPlayer player)
+            throws PlayerAlreadyAddedException {
+
+        AuctionPlayer dbPlayer = auctionPlayerDao.findByLeagueIdAndPlayerId(player.getLeagueId(),
+                player.getPlayerId());
+
+        if (dbPlayer != null) {
+            throw new PlayerAlreadyAddedException(player.getPlayerId());
+        }
+
+        auctionPlayerDao.save(player);
     }
 
     /**
@@ -173,14 +144,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private AuctionPlayer getPlayerToAdd(int leagueId, int playerId, int teamId, int bid)
             throws AuctionPlayersServiceException {
 
-        LeagueSettings settings;
-        try {
-            settings = leagueDao.getLeagueSettings(leagueId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to get settings for league "
-                    + leagueId, e);
-        }
+        League settings = leagueDao.findOne(leagueId);
 
         AuctionPlayer player = new AuctionPlayer();
         player.setBid(bid);
@@ -204,14 +168,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private void checkForPlayerWon(int leagueId, int playerId)
             throws AuctionPlayersServiceException, PlayerAlreadyWonException {
 
-        AuctionPlayer playerWon;
-        try {
-            playerWon = playersWonDao.getPlayerWon(leagueId, playerId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to get player won for player "
-                    + playerId, e);
-        }
+        AuctionPlayer playerWon = playersWonDao.findByLeagueIdAndPlayerId(leagueId, playerId);
 
         if (playerWon != null) {
             throw new PlayerAlreadyWonException("Player " + playerId + " has already been won.");
@@ -225,7 +182,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * @param leagueSettings The league settings determining the extension time and buffer.
      * @return The updated expiration time.
      */
-    private long getUpdatedExpirationTime(long currentExpirationTime, LeagueSettings leagueSettings) {
+    private long getUpdatedExpirationTime(long currentExpirationTime, League leagueSettings) {
 
         long currentTime = System.currentTimeMillis();
 
@@ -243,14 +200,14 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * @param leagueId The league the bid is being made in.
      * @param teamId The team making the bid.
      * @param bid The bid to check.
-     * @param leagueSettings The league settings to determine roster size and minimum bids.
+     * @param league The league settings to determine roster size and minimum bids.
      * @throws InsufficientBidException if the bid is not greater than the previous bid.
      * @throws InsufficientFundsException if the team cannot afford the bid.
      * @throws RosterFullException if the team does not have roster space available for the bid.
      * @throws AuctionPlayersServiceException if a data access error occurs.
      */
     private void checkBid(AuctionPlayer auctionPlayer, int leagueId, int teamId, int bid,
-            LeagueSettings leagueSettings) throws AuctionPlayersServiceException {
+            League league) throws AuctionPlayersServiceException {
 
         if (bid <= auctionPlayer.getBid()) {
             throw new InsufficientBidException(auctionPlayer.getBid(), bid);
@@ -258,8 +215,8 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
 
         List<AuctionPlayer> outstandingPlayers = getOutstandingPlayers(leagueId, teamId);
 
-        int maxRosterSpace = leagueSettings.getRosterSize();
-        int maxBid = getMaxBid(outstandingPlayers, leagueSettings);
+        int maxRosterSpace = league.getRosterSize();
+        int maxBid = getMaxBid(outstandingPlayers, league);
         if (auctionPlayer.getTeamId() == teamId) {
             maxBid += auctionPlayer.getBid() - 1;
             maxRosterSpace += 1;
@@ -285,23 +242,9 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private List<AuctionPlayer> getOutstandingPlayers(int leagueId, int teamId)
             throws AuctionPlayersServiceException {
 
-        List<AuctionPlayer> outstandingPlayers;
-        try {
-            outstandingPlayers = auctionPlayerDao.getPlayersByTeam(leagueId, teamId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException(
-                    "Failed to get players with leading bid by team " + teamId, e);
-        }
+        List<AuctionPlayer> outstandingPlayers = auctionPlayerDao.findByTeamId(teamId);
 
-        List<AuctionPlayer> playersWon;
-        try {
-            playersWon = playersWonDao.getPlayersWonByTeam(leagueId, teamId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to get players won by team " + teamId,
-                    e);
-        }
+        List<AuctionPlayer> playersWon = playersWonDao.findByTeamId(teamId);
 
         outstandingPlayers.addAll(playersWon);
 
@@ -315,7 +258,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * @param leagueSettings The settings containing the salary cap and roster size.
      * @return The maximum bid the team can make.
      */
-    private int getMaxBid(List<AuctionPlayer> outstandingPlayers, LeagueSettings leagueSettings) {
+    private int getMaxBid(List<AuctionPlayer> outstandingPlayers, League leagueSettings) {
 
         int totalBids = 0;
         for (AuctionPlayer outstandingPlayer : outstandingPlayers) {
@@ -340,14 +283,8 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private synchronized AuctionPlayer getAuctionPlayer(int leagueId, int playerId)
             throws AuctionPlayersServiceException {
 
-        AuctionPlayer auctionPlayer;
-        try {
-            auctionPlayer = auctionPlayerDao.getPlayer(leagueId, playerId);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException("Failed to get auction player for playerId "
-                    + playerId, e);
-        }
+        AuctionPlayer auctionPlayer = auctionPlayerDao
+                .findByLeagueIdAndPlayerId(leagueId, playerId);
 
         if (auctionPlayer == null || checkForExpiredBid(auctionPlayer)) {
             throw new AuctionExpiredException("Auction has expired for player " + playerId);
@@ -384,22 +321,8 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private synchronized void updatePlayerWon(AuctionPlayer auctionPlayer)
             throws AuctionPlayersServiceException {
 
-        try {
-            playersWonDao.addPlayerWon(auctionPlayer);
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException(
-                    "Failed to add player to players won for player " + auctionPlayer.getPlayerId(),
-                    e);
-        }
+        playersWonDao.save(auctionPlayer);
 
-        try {
-            auctionPlayerDao.deletePlayer(auctionPlayer.getPlayerId(), auctionPlayer.getLeagueId());
-        }
-        catch (DataAccessException e) {
-            throw new AuctionPlayersServiceException(
-                    "Failed to remove player from auction for player "
-                            + auctionPlayer.getPlayerId(), e);
-        }
+        auctionPlayerDao.delete(auctionPlayer.getId());
     }
 }

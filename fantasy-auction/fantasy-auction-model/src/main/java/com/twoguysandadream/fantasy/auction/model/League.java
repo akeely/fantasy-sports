@@ -1,12 +1,21 @@
 package com.twoguysandadream.fantasy.auction.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * The settings for a league.
  * 
  * @author akeely
  */
-public class LeagueSettings {
+@Entity
+public class League {
 
+    /** A unique identifier for the league. */
+    @Id
+    private int leagueId;
+    /** A human-readable name for the league. */
+    private String name;
     /** The individual team salary cap in dollars. */
     private int salaryCap;
     /** The number of players on each team. */
@@ -19,6 +28,42 @@ public class LeagueSettings {
     private long bidTimeExtensionMillis;
     /** The initial length of the auction. */
     private long auctionLengthMillis;
+
+    
+    /**
+     * @return the leagueId
+     */
+    public int getLeagueId() {
+    
+        return leagueId;
+    }
+
+    
+    /**
+     * @param leagueId the leagueId to set
+     */
+    public void setLeagueId(int leagueId) {
+    
+        this.leagueId = leagueId;
+    }
+
+    
+    /**
+     * @return the name
+     */
+    public String getName() {
+    
+        return name;
+    }
+
+    
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+    
+        this.name = name;
+    }
 
     /**
      * @return the salaryCap

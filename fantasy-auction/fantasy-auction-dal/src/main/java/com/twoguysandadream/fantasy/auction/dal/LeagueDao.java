@@ -3,22 +3,20 @@
  */
 package com.twoguysandadream.fantasy.auction.dal;
 
-import com.twoguysandadream.fantasy.auction.dal.exception.DataAccessException;
-import com.twoguysandadream.fantasy.auction.model.LeagueSettings;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.twoguysandadream.fantasy.auction.model.League;
 
 /**
  * Access information about leagues.
  * 
  * @author akeely
  */
-public interface LeagueDao {
-
+@Repository
+public interface LeagueDao extends CrudRepository<League, Integer> {
+    
     /**
-     * Get the settings for a league.
-     * 
-     * @param leagueId The league to get the settings for.
-     * @return The league settings.
-     * @throws DataAccessException if the settings cannot be retrieved.
+     * Not implementation needed - use {@link CrudRepository} methods. 
      */
-    public LeagueSettings getLeagueSettings(int leagueId) throws DataAccessException;
 }

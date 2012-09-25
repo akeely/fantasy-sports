@@ -1,6 +1,7 @@
 package com.twoguysandadream.fantasy.auction.dal;
 
-import com.twoguysandadream.fantasy.auction.dal.exception.DataAccessException;
+import org.springframework.data.repository.CrudRepository;
+
 import com.twoguysandadream.fantasy.auction.model.Player;
 
 /**
@@ -8,14 +9,9 @@ import com.twoguysandadream.fantasy.auction.model.Player;
  * 
  * @author akeely
  */
-public interface PlayerDao {
+public interface PlayerDao extends CrudRepository<Player, Integer> {
 
     /**
-     * Get a player.
-     * 
-     * @param playerId The identifier of the player.
-     * @return The player associated with the IDs.
-     * @throws DataAccessException if the player cannot be retrieved.
+     * Not implementation needed - use {@link CrudRepository} methods.
      */
-    public Player getPlayer(int playerId) throws DataAccessException;
 }

@@ -2,7 +2,9 @@ package com.twoguysandadream.fantasy.auction.dal;
 
 import java.util.List;
 
-import com.twoguysandadream.fantasy.auction.dal.exception.DataAccessException;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 
 /**
@@ -10,60 +12,32 @@ import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
  * 
  * @author akeely
  */
-public interface AuctionPlayerDao {
+@Repository
+public interface AuctionPlayerDao extends CrudRepository<AuctionPlayer, Integer> {
 
     /**
      * Get a list of players currently being auctioned for a given league.
      * 
      * @param leagueId The league to get the players for.
      * @return The players currently being auctioned.
-     * @throws DataAccessException if the players cannot be retrieved.
      */
-    public List<AuctionPlayer> getPlayers(int leagueId) throws DataAccessException;
+    public List<AuctionPlayer> findByLeagueId(int leagueId);
 
     /**
      * Get the list of players that a team is currently winning.
      * 
-     * @param leagueId The league to get the players from.
      * @param teamId The team to get the players for.
      * @return The players that the team is currently winning.
-     * @throws DataAccessException if the players cannot be retrieved.
      */
-    public List<AuctionPlayer> getPlayersByTeam(int leagueId, int teamId)
-            throws DataAccessException;
+    public List<AuctionPlayer> findByTeamId(int teamId);
 
     /**
-     * Add a new player to be auctioned.
+     * Get a player currently being auctioned.
      * 
-     * @param player The player to add.
-     * @throws DataAccessException if the player cannot be added or is already in the auction.
+     * @param leagueId The league of the auction to get the player for.
+     * @param playerId The player to get.
+     * @return The player being auctioned.
      */
-    public void addPlayer(AuctionPlayer player) throws DataAccessException;
+    public AuctionPlayer findByLeagueIdAndPlayerId(int leagueId, int playerId);
 
-    /**
-     * Update the winning bid team and amount and the expiration time for a player being auctioned.
-     * 
-     * @param player The player to update.
-     * @throws DataAccessException if the player cannot be updated or is not being auctioned.
-     */
-    public void updatePlayer(AuctionPlayer player) throws DataAccessException;
-
-    /**
-     * Get a player that is being auctioned.
-     * 
-     * @param leagueId The league of the auction.
-     * @param playerId The player to retrieve.
-     * @return The player being auctioned, or null if the player is not being auctioned.
-     * @throws DataAccessException if the player cannot be retrieved.
-     */
-    public AuctionPlayer getPlayer(int leagueId, int playerId) throws DataAccessException;
-
-    /**
-     * Remove a player from the auction.
-     * 
-     * @param leagueId The league of the auction to remove the player from.
-     * @param playerId The player to remove.
-     * @throws DataAccessException if the player cannot be removed.
-     */
-    public void deletePlayer(int leagueId, int playerId) throws DataAccessException;
 }
