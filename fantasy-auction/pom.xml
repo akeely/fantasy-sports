@@ -31,6 +31,7 @@
 		<module>fantasy-auction-model</module>
 		<module>fantasy-auction-dal</module>
 		<module>fantasy-auction-services</module>
+		<module>fantasy-auction-webapp</module>
 	</modules>
 
 	<build>
