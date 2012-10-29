@@ -3,6 +3,7 @@ package com.twoguysandadream.fantasy.auction.dal;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 
@@ -11,6 +12,7 @@ import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
  * 
  * @author akeely
  */
+@Repository
 public interface PlayersWonDao extends CrudRepository<AuctionPlayer, Integer>{
 
     /**

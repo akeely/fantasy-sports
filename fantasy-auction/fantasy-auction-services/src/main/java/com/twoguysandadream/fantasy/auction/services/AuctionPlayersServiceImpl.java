@@ -2,6 +2,10 @@ package com.twoguysandadream.fantasy.auction.services;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Component;
+
 import com.twoguysandadream.fantasy.auction.dal.AuctionPlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.LeagueDao;
 import com.twoguysandadream.fantasy.auction.dal.PlayersWonDao;
@@ -19,6 +23,7 @@ import com.twoguysandadream.fantasy.auction.services.exception.RosterFullExcepti
  * @see AuctionPlayersService
  * @author akeely
  */
+@Component
 public class AuctionPlayersServiceImpl implements AuctionPlayersService {
 
     /** Used to access the current players in the auction. */
@@ -35,6 +40,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * @param playersWonDao
      * @param leagueDao
      */
+    @Inject
     public AuctionPlayersServiceImpl(AuctionPlayerDao auctionPlayerDao,
             PlayersWonDao playersWonDao, LeagueDao leagueDao) {
 
@@ -152,7 +158,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         player.setPlayerId(playerId);
         player.setTeamId(teamId);
         player.setBid(bid);
-        player.setExpirationTime(settings.getAuctionLengthMillis());
+        player.setExpirationTime(System.currentTimeMillis() + settings.getAuctionLengthMillis());
 
         return player;
     }
