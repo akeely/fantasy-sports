@@ -9,8 +9,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 import com.twoguysandadream.fantasy.auction.model.League;
 import com.twoguysandadream.fantasy.auction.model.Player;
+import com.twoguysandadream.fantasy.auction.model.PlayerWon;
 import com.twoguysandadream.fantasy.auction.model.Sports;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,6 +29,9 @@ public class MySqlConnectionTest {
     @Autowired
     private LeagueDao leagueDao;
     
+    @Autowired
+    private PlayersWonDao playersWonDao;
+    
     @Test
     public void testConnection() {
     	
@@ -38,7 +43,16 @@ public class MySqlConnectionTest {
     }
     
     @Test
-    public void createLeague() {
+    public void testPlayerWon() {
+    	
+    	PlayerWon player = playersWonDao.findByLeagueIdAndPlayerId(0, PLAYER_ID);
+    	
+    	assertNotNull("PlayerWon should not be null", player);
+    	assertEquals("Unexpected name of player", NAME, player.getPlayer().getName());
+    }
+    
+    @Test
+    public void testLeague() {
     	
     	League league = leagueDao.findOne(0);
     	

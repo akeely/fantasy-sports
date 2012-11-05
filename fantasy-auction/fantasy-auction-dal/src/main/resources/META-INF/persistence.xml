@@ -8,6 +8,7 @@
 <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>com.twoguysandadream.fantasy.auction.model.Player</class>
         <class>com.twoguysandadream.fantasy.auction.model.AuctionPlayer</class>
+        <class>com.twoguysandadream.fantasy.auction.model.PlayerWon</class>
         <class>com.twoguysandadream.fantasy.auction.model.League</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 

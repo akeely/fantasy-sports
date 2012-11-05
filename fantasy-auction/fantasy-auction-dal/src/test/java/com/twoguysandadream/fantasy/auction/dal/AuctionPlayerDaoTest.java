@@ -35,10 +35,10 @@ public class AuctionPlayerDaoTest {
         Assert.assertNotNull("Failed to load AuctionPlayerDao.", auctionPlayerDao);
         
         AuctionPlayer player = new AuctionPlayer();
-        player.setBid(10);
+        player.setBid(1);
         player.setLeagueId(0);
         player.setPlayerId(0);
-        player.setExpirationTime(System.currentTimeMillis() + 1000000);
+        player.setExpirationTime(System.currentTimeMillis()+100000);
         player.setTeamId(0);
         
         auctionPlayerDao.save(player);

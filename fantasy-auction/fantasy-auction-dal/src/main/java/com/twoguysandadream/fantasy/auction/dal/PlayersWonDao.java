@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
+import com.twoguysandadream.fantasy.auction.model.PlayerWon;
 
 /**
  * Access the players that have already been won in an auction.
@@ -13,7 +13,7 @@ import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
  * @author akeely
  */
 @Repository
-public interface PlayersWonDao extends CrudRepository<AuctionPlayer, Integer>{
+public interface PlayersWonDao extends CrudRepository<PlayerWon, Integer>{
 
     /**
      * Get the players that have been won by a given team.
@@ -21,7 +21,7 @@ public interface PlayersWonDao extends CrudRepository<AuctionPlayer, Integer>{
      * @param teamId The team to get players won for.
      * @return The players won by the team.
      */
-    public List<AuctionPlayer> findByTeamId(int teamId);
+    public List<PlayerWon> findByTeamId(int teamId);
     
     /**
      * Get a player that has already been won.
@@ -30,5 +30,5 @@ public interface PlayersWonDao extends CrudRepository<AuctionPlayer, Integer>{
      * @param playerId The player to get.
      * @return The player that has been won, or null if the player has not been won.
      */
-    public AuctionPlayer findByLeagueIdAndPlayerId(int leagueId, int playerId);
+    public PlayerWon findByLeagueIdAndPlayerId(int leagueId, int playerId);
 }
