@@ -5,7 +5,5 @@
     <groupId>com.twoguysandadream</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.twoguysandadream</groupId>
   <artifactId>fantasy-auction-model</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
 </project>

@@ -1,7 +1,7 @@
-function AuctionCtrl($scope, $http, AuctionPlayer) {
-  $scope.auctionPlayers = [
-    {text:'learn angular', done:true},
-    {text:'build an angular app', done:false}];
+function AuctionCtrl($scope, $routeParams, AuctionPlayer) {
+	
+  $scope.leagueId = $routeParams.leagueId;
+  $scope.teamId = $routeParams.teamId;
  
   $scope.players = AuctionPlayer.query();
   /*$http.get('players.json').success(
@@ -10,31 +10,49 @@ function AuctionCtrl($scope, $http, AuctionPlayer) {
     }
   );*/
  
- 
-  $scope.bid = function(player) {
-  
-    player.bid = $scope.bidAmount;
-    
+  $scope.handleErrorResponse = function(response, message) {
+    alert(message + ": " + JSON.stringify(response));
   };
  
-  $scope.addTodo = function() {
-    $scope.auctionPlayers.push({text:$scope.todoText, done:false});
-    $scope.todoText = '';
+  $scope.bid = function(player,amount) {
+    player.bid=amount;
+    AuctionPlayer.update(player, 
+      function(){
+        var updatedPlayers = AuctionPlayer.query([],
+          function() {
+            $scope.players = updatedPlayers;
+          },
+          function(response) {
+            $scope.handleErrorResponse(response, "Failed to refresh player list");
+          }
+        );	
+      },
+      function(response) {
+        $scope.handleErrorResponse(response, "Bid failed");
+      }
+    );
+  };
+   
+  $scope.bidMin = function(player) {
+   
+    var newBid = player.bid + 1;
+   
+	alert("Bidding " + newBid + " on player " + player.id + " by team " + $scope.teamId);
+	/*player.bid = newBid;
+	player.teamId = $scope.teamId;
+	AuctionPlayer.update(player);
+	*/
+	$scope.bid(player, newBid);
   };
  
-  $scope.remaining = function() {
-    var count = 0;
-    angular.forEach($scope.auctionPlayers, function(auctionPlayer) {
-      count += auctionPlayer.done ? 0 : 1;
-    });
-    return count;
+  $scope.bidCustom = function(player) {
+   
+	alert("Bidding " + this.bidAmount + " on player " + player.id + " by team " + $scope.teamId);
+	$scope.bid(player, this.bidAmount);
   };
- 
-  $scope.archive = function() {
-    var oldPlayers = $scope.auctionPlayers;
-    $scope.auctionPlayers = [];
-    angular.forEach(oldPlayers, function(player) {
-      if (!player.done) $scope.auctionPlayers.push(player);
-    });
-  };
+}
+
+function TeamCtrl($scope, Team) {
+	
+	$scope.teams = Team.query();
 }

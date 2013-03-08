@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.twoguysandadream.fantasy.auction.dal.AuctionPlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.LeagueDao;
 import com.twoguysandadream.fantasy.auction.dal.PlayersWonDao;
-import com.twoguysandadream.fantasy.auction.model.AbstractAuctionPlayer;
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 import com.twoguysandadream.fantasy.auction.model.League;
 import com.twoguysandadream.fantasy.auction.model.PlayerWon;
@@ -227,7 +226,7 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
             throw new InsufficientBidException(auctionPlayer.getBid(), bid);
         }
 
-        List<AbstractAuctionPlayer> outstandingPlayers = getOutstandingPlayers(leagueId, teamId);
+        List<PlayerWon> outstandingPlayers = getOutstandingPlayers(leagueId, teamId);
 
         int maxRosterSpace = league.getRosterSize();
         int maxBid = getMaxBid(outstandingPlayers, league);
@@ -253,17 +252,20 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * @return The list of players the team has won and is leading.
      * @throws AuctionPlayersServiceException if the players cannot be retrieved.
      */
-    private List<AbstractAuctionPlayer> getOutstandingPlayers(int leagueId, int teamId)
+    private List<PlayerWon> getOutstandingPlayers(int leagueId, int teamId)
             throws AuctionPlayersServiceException {
 
-    	List<AbstractAuctionPlayer> outstandingPlayers = new ArrayList<AbstractAuctionPlayer>();
+    	List<PlayerWon> outstandingPlayers = new ArrayList<PlayerWon>();
         List<AuctionPlayer> auctionPlayers = auctionPlayerDao.findByTeamId(teamId);
 
         List<PlayerWon> playersWon = playersWonDao.findByTeamId(teamId);
 
-        outstandingPlayers.addAll(auctionPlayers);
         outstandingPlayers.addAll(playersWon);
 
+        for(AuctionPlayer player : auctionPlayers) {
+        	outstandingPlayers.add(player.toPlayerWon());
+        }
+        
         return outstandingPlayers;
     }
 
@@ -274,11 +276,11 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      * @param leagueSettings The settings containing the salary cap and roster size.
      * @return The maximum bid the team can make.
      */
-    private int getMaxBid(List<AbstractAuctionPlayer> outstandingPlayers, League leagueSettings) {
+    private int getMaxBid(List<PlayerWon> outstandingPlayers, League leagueSettings) {
 
         int totalBids = 0;
-        for (AbstractAuctionPlayer outstandingPlayer : outstandingPlayers) {
-            totalBids += outstandingPlayer.getBid();
+        for (PlayerWon outstandingPlayer : outstandingPlayers) {
+            totalBids += outstandingPlayer.getCost();
         }
 
         int openSpots = leagueSettings.getRosterSize() - outstandingPlayers.size() - 1;

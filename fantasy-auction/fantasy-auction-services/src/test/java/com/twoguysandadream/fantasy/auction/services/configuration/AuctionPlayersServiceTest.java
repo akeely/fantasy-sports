@@ -64,11 +64,7 @@ public class AuctionPlayersServiceTest {
 		MockitoAnnotations.initMocks(this);
 		auctionPlayersService = new AuctionPlayersServiceImpl(auctionPlayerDao, playersWonDao, leagueDao);
 		
-		PlayerWon playerWon = new PlayerWon();
-		playerWon.setLeagueId(LEAGUE_ID);
-		playerWon.setPlayerId(PLAYER_WON_ID);
-		playerWon.setTeamId(TEAM_ID);
-		playerWon.setBid(PLAYER_WON_BID);
+		PlayerWon playerWon = new PlayerWon(PLAYER_WON_ID, LEAGUE_ID, TEAM_ID, 0, PLAYER_WON_BID, null);
 		
 		when(playersWonDao.findByLeagueIdAndPlayerId(LEAGUE_ID, PLAYER_WON_ID)).thenReturn(playerWon);
 		when(playersWonDao.findByTeamId(TEAM_ID)).thenReturn(Collections.singletonList(playerWon));

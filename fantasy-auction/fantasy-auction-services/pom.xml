@@ -5,9 +5,7 @@
     <groupId>com.twoguysandadream</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.twoguysandadream</groupId>
   <artifactId>fantasy-auction-services</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>com.twoguysandadream</groupId>

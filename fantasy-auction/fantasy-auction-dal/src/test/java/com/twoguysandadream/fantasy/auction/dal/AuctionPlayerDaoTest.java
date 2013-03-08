@@ -1,19 +1,15 @@
 package com.twoguysandadream.fantasy.auction.dal;
 
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -39,9 +35,8 @@ public class AuctionPlayerDaoTest {
         player.setLeagueId(0);
         player.setPlayerId(0);
         player.setExpirationTime(System.currentTimeMillis()+100000);
-        player.setTeamId(0);
+        player.setTeamId(2);
         
         auctionPlayerDao.save(player);
     }
-
 }

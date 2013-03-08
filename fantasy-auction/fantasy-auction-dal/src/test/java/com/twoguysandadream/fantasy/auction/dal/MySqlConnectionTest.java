@@ -14,6 +14,7 @@ import com.twoguysandadream.fantasy.auction.model.League;
 import com.twoguysandadream.fantasy.auction.model.Player;
 import com.twoguysandadream.fantasy.auction.model.PlayerWon;
 import com.twoguysandadream.fantasy.auction.model.Sports;
+import com.twoguysandadream.fantasy.auction.model.Team;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@ActiveProfiles("prod")
@@ -21,7 +22,7 @@ import com.twoguysandadream.fantasy.auction.model.Sports;
 public class MySqlConnectionTest {
 
     private static final int PLAYER_ID = 1;
-    private static final String NAME = "Test Player";
+    private static final String NAME = "Erik Woulfe";
     
     @Autowired
     private PlayerDao playerDao;
@@ -31,6 +32,9 @@ public class MySqlConnectionTest {
     
     @Autowired
     private PlayersWonDao playersWonDao;
+    
+    @Autowired
+    private TeamDao teamDao;
     
     @Test
     public void testConnection() {
@@ -57,7 +61,16 @@ public class MySqlConnectionTest {
     	League league = leagueDao.findOne(0);
     	
     	assertNotNull(league);
-    	assertEquals("Test League", league.getName());
+    	assertEquals("Unit Test League", league.getName());
     }
 
+    @Test
+    public void testTeam() {
+    	
+    	Team team = teamDao.findOne(1);
+    	
+    	assertNotNull(team);
+    	assertEquals("Salt Bandits", team.getTeamName());
+    	assertEquals("Unit Test League", team.getLeague().getName());
+    }
 }

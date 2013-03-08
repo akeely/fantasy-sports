@@ -5,13 +5,11 @@
     <groupId>com.twoguysandadream</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.twoguysandadream</groupId>
   <artifactId>fantasy-auction-dal</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   
     <properties>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
-        <spring.framework.version>3.1.2.RELEASE</spring.framework.version>
+        <spring.framework.version>3.2.1.RELEASE</spring.framework.version>
     </properties>
      
     <dependencies>

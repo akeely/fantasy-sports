@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
-             version="1.0">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0">
 
 	<persistence-unit name="application" transaction-type="RESOURCE_LOCAL">
-<provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>com.twoguysandadream.fantasy.auction.model.Player</class>
-        <class>com.twoguysandadream.fantasy.auction.model.AuctionPlayer</class>
-        <class>com.twoguysandadream.fantasy.auction.model.PlayerWon</class>
-        <class>com.twoguysandadream.fantasy.auction.model.League</class>
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.twoguysandadream.fantasy.auction.model.Player</class>
+		<class>com.twoguysandadream.fantasy.auction.model.AuctionPlayer</class>
+		<class>com.twoguysandadream.fantasy.auction.model.PlayerWon</class>
+		<class>com.twoguysandadream.fantasy.auction.model.League</class>
+		<class>com.twoguysandadream.fantasy.auction.model.Team</class>
+		<class>com.twoguysandadream.fantasy.users.model.FantasyUserDetails</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-
 	</persistence-unit>
 
 </persistence>

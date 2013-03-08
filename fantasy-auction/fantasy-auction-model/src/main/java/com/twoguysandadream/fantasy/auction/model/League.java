@@ -1,6 +1,8 @@
 package com.twoguysandadream.fantasy.auction.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -13,7 +15,8 @@ public class League {
 
     /** A unique identifier for the league. */
     @Id
-    private int leagueId;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Integer leagueId;
     /** A human-readable name for the league. */
     private String name;
     /** The individual team salary cap in dollars. */
@@ -33,7 +36,7 @@ public class League {
     /**
      * @return the leagueId
      */
-    public int getLeagueId() {
+    public Integer getLeagueId() {
     
         return leagueId;
     }

@@ -51,6 +51,7 @@ public class AuctionPlayersController {
 	}
 	
 	@RequestMapping(value="league/{leagueId}/auctionPlayer", method=RequestMethod.POST)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void postAuctionPlayer(@PathVariable int leagueId, @RequestBody AuctionPlayer player) throws AuctionPlayersServiceException {
 		
 		auctionPlayersService.addAuctionPlayer(leagueId, player.getPlayerId(), player.getTeamId(), player.getBid());

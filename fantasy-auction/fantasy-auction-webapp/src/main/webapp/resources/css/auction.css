@@ -1,4 +1,3 @@
-.done-true {
-  text-decoration: line-through;
-  color: grey;
+td {
+	border: 1px solid black;	
 }

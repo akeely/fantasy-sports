@@ -2,6 +2,7 @@ package com.twoguysandadream.fantasy.auction;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader=AnnotationConfigContextLoader.class)
 @DirtiesContext
 public class AuctionPlayersControllerConfigurationTest {
 
 	@Configuration
-	@ComponentScan("com.twoguysandadream.fantasy")
+	@ComponentScan("com.twoguysandadream.fantasy.auction")
+	@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 	static public class ControllerConfiguration {
 
 	}
