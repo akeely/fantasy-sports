@@ -1,0 +1,37 @@
+
+<div ng-controller="AuctionCtrl">
+	<span>{{players.length}} players for auction.</span>
+	<table class="unstyled">
+		<tr>
+			<th>Player</th>
+			<th>Team</th>
+			<th>Leading Bidder</th>
+			<th>Position</th>
+			<th>Bid</th>
+			<th>Time</th>
+			<th></th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="player in players">
+			<td>{{player.player.name}}</td>
+			<td>{{player.player.team}}</td>
+			<td>{{player.team.teamName}}</td>
+			<td>{{player.player.position}}</td>
+			<td>{{player.bid}}</td>
+			<td>{{player.expirationTime}}</td>
+			<td>
+				<form ng-submit="bidMin({{player}})">
+					<input class="btn-primary" type="submit"
+						value="Bid {{player.bid+1}}" />
+				</form>
+			</td>
+			<td>
+				<form ng-submit="bidCustom({{player}})">
+					<input type="text" ng-model="bidAmount" value="{{player.bid+1}}"
+						size="3" /> 
+					<input class="btn-primary" type="submit" value="Bid" />
+				</form>
+			</td>
+		</tr>
+	</table>
+</div>
