@@ -14,3 +14,11 @@ angular.module('teamServices', ['ngResource']).
 	  }  
 	);
   });
+
+angular.module('availablePlayerServices', ['ngResource']).
+factory('AvailablePlayer', function($resource) {
+	return $resource('/league/1/auctionPlayer/availablePlayer', {}, {
+		query: {method:'GET', isArray:true}
+	  }  
+	);
+});

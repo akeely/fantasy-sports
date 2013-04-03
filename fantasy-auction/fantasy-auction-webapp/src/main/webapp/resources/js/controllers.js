@@ -67,3 +67,18 @@ function TeamCtrl($scope, Team) {
 
 	$scope.teams = Team.query();
 }
+
+function AvailablePlayerCtrl($scope, $routeParams, AvailablePlayer, AuctionPlayer, LeagueTeam) {
+	
+	$scope.availablePlayers = AvailablePlayer.query();
+	var teams = LeagueTeam.query();
+	for (t in teams) {
+		if(t.teamId === $routeParams.teamId) {
+			$scope.team = t;
+		}
+	}
+	
+	
+	
+}
+
