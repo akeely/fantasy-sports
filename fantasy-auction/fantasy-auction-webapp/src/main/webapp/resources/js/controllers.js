@@ -18,7 +18,7 @@ function AuctionCtrl($scope, $routeParams, $timeout, AuctionPlayer, LeagueTeam) 
 	};
 
 	(function autoRefresh() {
-		if($routeParams.refresh !== "off") {
+		if($routeParams.refresh === "true") {
 			$timeout(autoRefresh,3000);
 			updatePlayers();
 		}
