@@ -1,0 +1,19 @@
+<div ng-controller="AvailablePlayerCtrl">
+<span>Select player to add for {{team.teamName}} with {{team.adds}} adds:</span>
+<span>Find by name: <input ng-model="search.name" /><br>
+Find by position: <input ng-model="search.position" /></span>
+<table>
+<tr>
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Add</th>
+</tr>
+<tr ng-repeat="player in availablePlayers | filter:search | orderBy: 'rank' | limitTo: 25">
+  <td>{{player.rank}}</td>
+  <td>{{player.name}}</td>
+  <td>{{player.position}}</td>
+  <td>TODO add link</td>
+</tr>
+</table>
+</div>
