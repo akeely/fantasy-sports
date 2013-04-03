@@ -34,4 +34,16 @@
 			</td>
 		</tr>
 	</table>
+	<table>
+	   <tr>
+	       <th>Team</th>
+	       <th>Budget</th>
+	       <th>Adds</th>
+	   </tr>
+	   <tr ng-repeat="team in teams">
+	       <td>{{team.teamName}}</td>
+	       <td ng-bind="budget(team)"></td>
+	       <td>{{team.adds}}</td>
+	   </tr>
+	</table>
 </div>

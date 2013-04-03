@@ -27,4 +27,12 @@ public interface TeamDao extends CrudRepository<Team, Integer> {
 	 * @return The teams associated with the user.
 	 */
 	public List<Team> findByUserId(int userId);
+	
+	/**
+	 * Get the list of teams that are in a league.
+	 * 
+	 * @param leagueId The league to get teams for.
+	 * @return The teams that are in a league.
+	 */
+	public List<Team> findByLeagueId(int leagueId);
 }

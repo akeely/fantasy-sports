@@ -3,6 +3,8 @@ angular.module('auctionPlayerServices', ['ngResource']).
       return $resource('/league/1/auctionPlayer/:playerId', {playerId:'@playerId'}, {
           update: {method:'PUT'}
       });
+    }).factory('LeagueTeam', function($resource) {
+    	return $resource('/league/1/team/:teamId', {teamId:'@teamId'});
     }); 
 
 angular.module('teamServices', ['ngResource']).

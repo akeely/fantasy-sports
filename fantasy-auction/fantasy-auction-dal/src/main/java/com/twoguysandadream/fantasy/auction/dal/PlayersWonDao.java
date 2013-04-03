@@ -24,6 +24,14 @@ public interface PlayersWonDao extends CrudRepository<PlayerWon, Integer>{
     public List<PlayerWon> findByTeamId(int teamId);
     
     /**
+     * Get the full list of players won in a league.
+     * 
+     * @param leagueId The league to get the players won for.
+     * @return The players that have been won in the league.
+     */
+    public List<PlayerWon> findByLeagueId(int leagueId);
+    
+    /**
      * Get a player that has already been won.
      * 
      * @param leagueId The league to get the player for.

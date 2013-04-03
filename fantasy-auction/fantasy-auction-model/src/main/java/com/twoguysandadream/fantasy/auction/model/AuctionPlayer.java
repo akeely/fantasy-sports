@@ -145,4 +145,18 @@ public class AuctionPlayer {
 	
 	    this.player = player;
 	}
+
+	/**
+	 * @return the team
+	 */
+	public Team getTeam() {
+		return team;
+	}
+
+	/**
+	 * @param team the team to set
+	 */
+	public void setTeam(Team team) {
+		this.team = team;
+	}
 }

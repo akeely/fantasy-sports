@@ -3,6 +3,7 @@ package com.twoguysandadream.fantasy.auction.services;
 import java.util.List;
 
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
+import com.twoguysandadream.fantasy.auction.model.Player;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionPlayersServiceException;
 import com.twoguysandadream.fantasy.auction.services.exception.InsufficientBidException;
 import com.twoguysandadream.fantasy.auction.services.exception.InsufficientFundsException;
@@ -25,6 +26,15 @@ public interface AuctionPlayersService {
     public List<AuctionPlayer> getAuctionPlayers(int leagueId)
             throws AuctionPlayersServiceException;
 
+    /**
+     * Get the list of players that can be added to the auction.
+     * 
+     * @param leagueId The league to get the players for.
+     * @return The players available to add to the auction.
+     * @throws AuctionPlayersServiceException
+     */
+    public List<Player> getAvailablePlayers(int leagueId) throws AuctionPlayersServiceException;
+    
     /**
      * Submit a new bid for a player.
      * 

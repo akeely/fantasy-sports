@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
+import com.twoguysandadream.fantasy.auction.model.Player;
 import com.twoguysandadream.fantasy.auction.services.AuctionPlayersService;
 import com.twoguysandadream.fantasy.auction.services.AuctionPlayersServiceImpl;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionPlayersServiceException;
@@ -34,11 +35,13 @@ public class AuctionPlayersController {
 	@RequestMapping(value="league/{leagueId}/auctionPlayer", method=RequestMethod.GET)
 	public @ResponseBody List<AuctionPlayer> getAuctionPlayers(@PathVariable int leagueId, Model model) throws AuctionPlayersServiceException {
 		
-		//	model.addAttribute("auctionPlayers", auctionPlayersService.getAuctionPlayers(leagueId));
-
-		//return "auctionPlayers/view";
-		
 		return auctionPlayersService.getAuctionPlayers(leagueId);
+	}
+	
+	@RequestMapping(value="league/{leagueId}/auctionPlayer/availablePlayer", method=RequestMethod.GET)
+	public @ResponseBody List<Player> getAvailablePlayers(@PathVariable int leagueId) throws AuctionPlayersServiceException {
+		
+		return auctionPlayersService.getAvailablePlayers(leagueId);
 	}
 	
 	@RequestMapping(value="league/{leagueId}/auctionPlayer/{playerId}", method=RequestMethod.PUT)

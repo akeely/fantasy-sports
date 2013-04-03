@@ -1,9 +1,12 @@
 package com.twoguysandadream.fantasy.auction.dal;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.twoguysandadream.fantasy.auction.model.Player;
+import com.twoguysandadream.fantasy.auction.model.Sports;
 
 /**
  * Access metadata relating to players.
@@ -13,7 +16,7 @@ import com.twoguysandadream.fantasy.auction.model.Player;
 @Repository
 public interface PlayerDao extends CrudRepository<Player, Integer> {
 
-    /**
-     * Not implementation needed - use {@link CrudRepository} methods.
-     */
+    
+	public List<Player> findBySportAndActiveAndPlayerIdNotIn(Sports sport, boolean isActive, List<Integer> playerIds);
+	
 }

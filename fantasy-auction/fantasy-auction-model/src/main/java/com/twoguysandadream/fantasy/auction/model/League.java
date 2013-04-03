@@ -31,7 +31,8 @@ public class League {
     private long bidTimeExtensionMillis;
     /** The initial length of the auction. */
     private long auctionLengthMillis;
-
+    /** The sport of the league. */
+    private Sports sport;
     
     /**
      * @return the leagueId
@@ -163,4 +164,20 @@ public class League {
 
         return minimumBid;
     }
+
+
+	/**
+	 * @return the sport
+	 */
+	public Sports getSport() {
+		return sport;
+	}
+
+
+	/**
+	 * @param sport the sport to set
+	 */
+	public void setSport(Sports sport) {
+		this.sport = sport;
+	}
 }

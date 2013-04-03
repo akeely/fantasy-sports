@@ -1,11 +1,13 @@
 package com.twoguysandadream.fantasy.auction.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class Team {
@@ -20,10 +22,11 @@ public class Team {
 	private int leagueId;
 	/** The owner of the team. */
 	private int userId;
-	/** The league that the team is in. */
-	@ManyToOne
-	@JoinColumn(name = "leagueId", insertable = false, updatable = false)
-	private League league;
+	/** The number of players the team can add to the auction. */
+	private int adds;
+	/** The roster of the team. */
+	@Transient
+	private List<PlayerWon> playersWon = new ArrayList<PlayerWon>();
 	
 	/**
 	 * @return the teamId
@@ -73,12 +76,28 @@ public class Team {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	
 	/**
-	 * @return the league
+	 * @return the adds
 	 */
-	public League getLeague() {
-		return league;
+	public int getAdds() {
+		return adds;
 	}
-	
+	/**
+	 * @param adds the adds to set
+	 */
+	public void setAdds(int adds) {
+		this.adds = adds;
+	}
+	/**
+	 * @return the playersWon
+	 */
+	public List<PlayerWon> getPlayersWon() {
+		return playersWon;
+	}
+	/**
+	 * @param playersWon the playersWon to set
+	 */
+	public void setPlayersWon(List<PlayerWon> playersWon) {
+		this.playersWon = playersWon;
+	}	
 }

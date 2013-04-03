@@ -9,14 +9,19 @@ import org.springframework.stereotype.Component;
 
 import com.twoguysandadream.fantasy.auction.dal.AuctionPlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.LeagueDao;
+import com.twoguysandadream.fantasy.auction.dal.PlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.PlayersWonDao;
+import com.twoguysandadream.fantasy.auction.dal.TeamDao;
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 import com.twoguysandadream.fantasy.auction.model.League;
+import com.twoguysandadream.fantasy.auction.model.Player;
 import com.twoguysandadream.fantasy.auction.model.PlayerWon;
+import com.twoguysandadream.fantasy.auction.model.Team;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionExpiredException;
 import com.twoguysandadream.fantasy.auction.services.exception.AuctionPlayersServiceException;
 import com.twoguysandadream.fantasy.auction.services.exception.InsufficientBidException;
 import com.twoguysandadream.fantasy.auction.services.exception.InsufficientFundsException;
+import com.twoguysandadream.fantasy.auction.services.exception.NoAddsAvailableException;
 import com.twoguysandadream.fantasy.auction.services.exception.PlayerAlreadyAddedException;
 import com.twoguysandadream.fantasy.auction.services.exception.PlayerAlreadyWonException;
 import com.twoguysandadream.fantasy.auction.services.exception.RosterFullException;
@@ -34,6 +39,10 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
     private final PlayersWonDao playersWonDao;
     /** Used to access information about the league. */
     private final LeagueDao leagueDao;
+    /** Used to determine the players that can be added to the auction. */
+    private final PlayerDao playerDao;
+    /** Used to track the number of players a team can add to the auction. */
+    private final TeamDao teamDao;
 
     /**
      * Load the DAL dependencies needs to manage the auction.
@@ -44,11 +53,13 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
      */
     @Inject
     public AuctionPlayersServiceImpl(AuctionPlayerDao auctionPlayerDao,
-            PlayersWonDao playersWonDao, LeagueDao leagueDao) {
+            PlayersWonDao playersWonDao, LeagueDao leagueDao, PlayerDao playerDao, TeamDao teamDao) {
 
         this.auctionPlayerDao = auctionPlayerDao;
         this.playersWonDao = playersWonDao;
         this.leagueDao = leagueDao;
+        this.playerDao = playerDao;
+        this.teamDao = teamDao;
     }
 
     /**
@@ -77,6 +88,28 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
 
         return getAuctionPlayersInternal(leagueId);
     }
+    
+    /**
+     * @see AuctionPlayersService#getAvailablePlayers(int)
+     */
+	@Override
+	public List<Player> getAvailablePlayers(int leagueId)
+			throws AuctionPlayersServiceException {
+		
+		League league = leagueDao.findOne(leagueId);
+		List<AuctionPlayer> currentPlayers = auctionPlayerDao.findByLeagueId(leagueId);
+		List<PlayerWon> wonPlayers = playersWonDao.findByLeagueId(leagueId);
+		
+		List<Integer> unavailablePlayerIds = new ArrayList<Integer>();
+		for(AuctionPlayer player : currentPlayers) {
+			unavailablePlayerIds.add(player.getPlayerId());
+		}
+		for(PlayerWon player : wonPlayers) {
+			unavailablePlayerIds.add(player.getPlayerId());
+		}
+		
+		return playerDao.findBySportAndActiveAndPlayerIdNotIn(league.getSport(), true, unavailablePlayerIds);
+	}
 
     /**
      * @see AuctionPlayersService#updateBid(int, int, int, int)
@@ -141,10 +174,29 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         League league = leagueDao.findOne(player.getLeagueId());
         checkBid(new AuctionPlayer(), player.getLeagueId(), player.getTeamId(), player.getBid(), league);
 
+        removeAdd(player.getTeamId());
+        
         auctionPlayerDao.save(player);
     }
 
     /**
+     * Decrement the number of players a team can add to the auction.
+     * 
+     * @param teamId The team to remove the add for.
+     * @throws NoAddsAvailableException if no adds are available to remove.
+     */
+    private void removeAdd(int teamId) throws NoAddsAvailableException {
+		
+    	Team team = teamDao.findOne(teamId);
+    	if(team.getAdds() <= 0) {
+    		throw new NoAddsAvailableException("No adds available. Cannot add new player.");
+    	}
+		
+    	team.setAdds(team.getAdds() - 1);
+    	teamDao.save(team);
+	}
+
+	/**
      * Get the player to add to the auction.
      * 
      * @param leagueId The league to add the player for.
@@ -326,11 +378,26 @@ public class AuctionPlayersServiceImpl implements AuctionPlayersService {
         }
 
         updatePlayerWon(auctionPlayer.toPlayerWon());
+        
+        updateAdds(auctionPlayer.getTeamId());
 
         return true;
     }
 
     /**
+     * Allow the given team to add a player to the auction.
+     * 
+     * @param teamId The team to give an add to.
+     */
+    private void updateAdds(int teamId) {
+	
+    	Team team = teamDao.findOne(teamId);
+    	team.setAdds(team.getAdds() + 1);
+		
+    	teamDao.save(team);
+	}
+
+	/**
      * Mark a player as won and remove them from the auction.
      * 
      * @param auctionPlayer The player that has been won.

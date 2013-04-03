@@ -71,6 +71,5 @@ public class MySqlConnectionTest {
     	
     	assertNotNull(team);
     	assertEquals("Salt Bandits", team.getTeamName());
-    	assertEquals("Unit Test League", team.getLeague().getName());
     }
 }

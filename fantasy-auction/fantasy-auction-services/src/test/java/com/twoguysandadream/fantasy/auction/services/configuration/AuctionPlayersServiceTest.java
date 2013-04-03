@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.twoguysandadream.fantasy.auction.dal.AuctionPlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.LeagueDao;
+import com.twoguysandadream.fantasy.auction.dal.PlayerDao;
 import com.twoguysandadream.fantasy.auction.dal.PlayersWonDao;
 import com.twoguysandadream.fantasy.auction.model.AuctionPlayer;
 import com.twoguysandadream.fantasy.auction.model.League;
@@ -57,12 +58,14 @@ public class AuctionPlayersServiceTest {
 	private PlayersWonDao playersWonDao;
 	@Mock
 	private LeagueDao leagueDao;
+	@Mock
+	private PlayerDao playerDao;
 	private AuctionPlayersService auctionPlayersService;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		auctionPlayersService = new AuctionPlayersServiceImpl(auctionPlayerDao, playersWonDao, leagueDao);
+		auctionPlayersService = new AuctionPlayersServiceImpl(auctionPlayerDao, playersWonDao, leagueDao, playerDao);
 		
 		PlayerWon playerWon = new PlayerWon(PLAYER_WON_ID, LEAGUE_ID, TEAM_ID, 0, PLAYER_WON_BID, null);
 		
